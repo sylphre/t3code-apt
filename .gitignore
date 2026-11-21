@@ -1,0 +1,14 @@
+# Copyright (C) 2014-2026 Laurier Sylph. All rights reserved.
+
+# Signing secrets and scratch space never belong in git.
+secrets/
+tmp/
+
+# Upstream binaries stay out of git: pool/ is populated by scripts/fetch.sh
+# and pinned by upstream/debs.sha256. Host them as release assets or with
+# git-lfs if a binary-free clone is not enough.
+pool/
+*.deb
+*.part
+
+.DS_Store

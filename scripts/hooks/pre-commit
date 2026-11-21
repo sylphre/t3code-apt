@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Copyright (C) 2014-2026 Laurier Sylph. All rights reserved.
+#
+# Pre-commit guard: refuse to commit signing secrets or pool binaries,
+# and re-verify the signed metadata when it is staged.
+
+set -euo pipefail
+
+fail() { printf "pre-commit: %s\n" "$*" >&2; exit 1; }
+
+staged="$(git diff --cached --name-only --diff-filter=ACMR)"
+[[ -n "$staged" ]] || exit 0
+
+while IFS= read -r f; do
+  case "$f" in
+    secrets/*) fail "refusing to commit secret material: $f" ;;
+    *.deb|*.part) fail "refusing to commit binary in pool: $f" ;;
+  esac
+done <<< "$staged"
+
+if grep -qx "dists/stable/InRelease" <<< "$staged"; then
+  scripts/check.sh
+fi

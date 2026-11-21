@@ -1,0 +1,6 @@
+# Copyright (C) 2014-2026 Laurier Sylph. All rights reserved.
+
+# Repository metadata is plain text so diffs stay reviewable.
+dists/**/* -text
+*.asc text eol=lf
+*.sh text eol=lf

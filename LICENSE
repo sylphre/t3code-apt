@@ -1,0 +1,17 @@
+Copyright (C) 2014-2026 Laurier Sylph. All rights reserved.
+
+This repository (build scripts, configuration, repository metadata and
+documentation) is proprietary software of the copyright holder. All
+rights are reserved.
+
+You may use the resulting APT archive as an end user, and you may run
+the scripts in this repository to build, sign, verify and publish that
+archive of unmodified upstream T3 Code packages. Any other use,
+including redistribution of the scripts or of a modified archive under
+this project's name, requires prior written permission from the
+copyright holder.
+
+The T3 Code application packages redistributed by this archive are
+unmodified official builds published by T3 Tools Inc. and remain
+licensed under the MIT License. See THIRD-PARTY-NOTICES.md for the
+upstream copyright notice and license text.
