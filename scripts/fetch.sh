@@ -21,7 +21,12 @@ trap 'rm -rf "$TMP"' EXIT
 
 mkdir -p "$POOL" "${ROOT}/upstream"
 MANIFEST="${ROOT}/upstream/debs.sha256"
-touch "$MANIFEST"
+if [[ -f "$MANIFEST" ]]; then
+  grep -q '^# Copyright' "$MANIFEST" \
+    || die "manifest lost its header: upstream/debs.sha256"
+else
+  printf '# Copyright %s\n' "$COPYRIGHT" > "$MANIFEST"
+fi
 
 api="https://api.github.com/repos/${UPSTREAM_REPO}/releases/tags/${TAG}"
 base="https://github.com/${UPSTREAM_REPO}/releases/download/${TAG}"
@@ -60,7 +65,9 @@ for arch in $ARCHES; do
 
   if ! grep -qF "  ${name}" "$MANIFEST"; then
     printf '%s  %s\n' "$want" "$name" >> "$MANIFEST"
-    sort -o "$MANIFEST" "$MANIFEST"
+    # Keep the copyright header first while ordering the hash lines.
+    { head -1 "$MANIFEST"; tail -n +2 "$MANIFEST" | sort; } > "$MANIFEST.new"
+    mv "$MANIFEST.new" "$MANIFEST"
   fi
 done
 

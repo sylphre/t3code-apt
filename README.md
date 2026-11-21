@@ -20,6 +20,9 @@ scripts/verify.sh              re-check pool/ against pinned hashes
 scripts/index.sh               build Packages/Release/InRelease + sign
 scripts/check.sh               verify signatures and file references
 scripts/install-hint.sh        print the apt setup snippet for BASE_URL
+scripts/deploy.sh              rsync the archive to a static host
+scripts/setup-git.sh           enable the repo's git hooks
+scripts/hooks/pre-commit       block secrets/binaries, re-check signatures
 key/t3code-archive-keyring.asc public signing key (safe to commit)
 upstream/debs.sha256           pinned SHA256 of every redistributed .deb
 pool/main/*.deb                upstream binaries (git-ignored, see below)
@@ -38,6 +41,7 @@ make the pool reproducible with `make fetch` on any host.
 ## First-time setup
 
 ```sh
+scripts/setup-git.sh     # enable the pre-commit guard (once per clone)
 make key                 # create key material in secrets/gnupg (git-ignored)
 make fetch VERSION=0.1.11
 make index               # writes dists/stable and refreshes key/
@@ -67,6 +71,12 @@ smoke test:
 
 ```sh
 make serve               # http://127.0.0.1:8080
+```
+
+To push a build out with rsync:
+
+```sh
+make deploy DEST=user@host:/srv/t3code
 ```
 
 Then on a client machine:
