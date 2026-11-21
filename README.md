@@ -106,14 +106,13 @@ To push a build out with rsync:
 make deploy DEST=user@host:/srv/t3code
 ```
 
-Then on a client machine, with `BASE_URL=https://sylphre.github.io/t3code-apt`
-for the Pages deployment:
+Then on a client machine:
 
 ```sh
 sudo install -d -m 0755 /etc/apt/keyrings
 sudo curl -fsSL -o /etc/apt/keyrings/t3code-archive-keyring.asc \
-  "$BASE_URL/key/t3code-archive-keyring.asc"
-echo "deb [signed-by=/etc/apt/keyrings/t3code-archive-keyring.asc] $BASE_URL stable main" \
+  https://sylphre.github.io/t3code-apt/key/t3code-archive-keyring.asc
+echo "deb [signed-by=/etc/apt/keyrings/t3code-archive-keyring.asc] https://sylphre.github.io/t3code-apt stable main" \
   | sudo tee /etc/apt/sources.list.d/t3code.list
 sudo apt-get update
 sudo apt-get install t3code
