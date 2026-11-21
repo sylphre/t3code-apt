@@ -5,13 +5,12 @@ Copyright: (C) 2014-2026 Laurier Sylph. All rights reserved.
 Architectures: amd64 arm64
 Codename: stable
 Components: main
-Date: Sat, 21 Nov 2026 08:46:58 +0000
+Date: Sat, 21 Nov 2026 08:56:22 +0000
 Description: APT archive for the T3 Code desktop app
 Label: T3 Code
 Origin: T3 Code APT Archive
 Suite: stable
 MD5Sum:
- f5fe46b1383bee631bcfc68207098a48             3347 Release
  7a30be9a2660592264abc7f5f6009897             1145 main/binary-amd64/Packages
  b4cae4e893f2233c0f5fade945fedf2a              737 main/binary-amd64/Packages.gz
  1af967e54518db4ad787e9e8fc928d04              824 main/binary-amd64/Packages.xz
@@ -19,7 +18,6 @@ MD5Sum:
  24133409fcbb3952a29849b3c113ab21              736 main/binary-arm64/Packages.gz
  b91bdc2402b3b043e07cf6c9a69a527e              820 main/binary-arm64/Packages.xz
 SHA1:
- a8417a2c98f6871d648304a0b3ebc672e0e295b5             3347 Release
  18989854918f7d78044c90bdf2c6963e32075b6d             1145 main/binary-amd64/Packages
  629decc43c361bed6457d89f6ca6f3b12ef42b06              737 main/binary-amd64/Packages.gz
  a97231c6a3b74648e27b69d48f5fd930eb066fad              824 main/binary-amd64/Packages.xz
@@ -27,7 +25,6 @@ SHA1:
  a0274af73065cd1cc9f6972ee68b3d1085cd6eb7              736 main/binary-arm64/Packages.gz
  25e02ac57d5b1b8270feb828653b63b4d8d06cb8              820 main/binary-arm64/Packages.xz
 SHA256:
- b60a6e7ed33156e62555f16421042b0b08c2579786a1414b835fa8dc4124a249             3347 Release
  0139a981822bbad7dc972bdf5b2eac48068a9c5ff487f67e637989cbb60aeaed             1145 main/binary-amd64/Packages
  5872eb8919b2e4ae0a9eb2966162e11bbea530bade0a4fd0f8c62731d07d7e9f              737 main/binary-amd64/Packages.gz
  6b28db86c0a9e7cb912a8ea15de329f2cc8429c4fe35133f0ec99dbe0480067f              824 main/binary-amd64/Packages.xz
@@ -35,7 +32,6 @@ SHA256:
  cad30ddd4ffa11600264d4eb35c436b35c577a687c70e8ff2b77c9f48aa6ed35              736 main/binary-arm64/Packages.gz
  9563ab195b19411ff6cc4dc4810d6fd718d4849bb10c15df030ef614aa5022f0              820 main/binary-arm64/Packages.xz
 SHA512:
- 6a96e89b59cec6c4befa8be4cb920f99a99d3dd34ec31aa278edb1affccd0f3a710d0d484feea627805736c3a4b62b22092157c3d76fd5556fd52cdb93a86284             3347 Release
  c80e79a7d7483124ba42ab8099657a051aa36fc52b71e0f3cf36fae014ab3bee2221d5b0557de8b54aa0fbb19af7ffce8de931b40929e415d18b629726cfc73e             1145 main/binary-amd64/Packages
  f41e8d49a69001272e8acac4965e64d8b9f9bf45d7b60c35de23e39e67565723e2792bc6d1c17970f92a77c7a2379b426b6be21839c1ca4968ce5349a158d40d              737 main/binary-amd64/Packages.gz
  deba48363dfd83b59312896bf5cedd693b4db41b74103a1843f74a26d99f156149185090c9ea14b5f1623c865d3d51080c1821ab1645768d0268db92d9b0205c              824 main/binary-amd64/Packages.xz
@@ -44,8 +40,8 @@ SHA512:
  43d1724e5dcd976a656f523530c2f4b6a3525a0d780808cbc76a8e0de340b973dca166c6c1138b71fb42f58b0287f50a1926688b7783cc55b2d2fb9ddd9a395d              820 main/binary-arm64/Packages.xz
 -----BEGIN PGP SIGNATURE-----
 
-iIcEARYIAC8WIQQCb4EyQ+RiyGi6jyV5IYiKe1Ua8gUCawFaghEcbGF1cmllckBz
-eWxwaC5yZQAKCRB5IYiKe1Ua8lo1AQCHVr5mezwo8nFS4dEVivlUUlLCgdiQCe+X
-UOBKZGAptwEAko8UFMm4mOWHH5lxez7ZOhfjnT20K6aJJqS28dMUAQ8=
-=mB+o
+iIcEARYIAC8WIQQCb4EyQ+RiyGi6jyV5IYiKe1Ua8gUCawFcthEcbGF1cmllckBz
+eWxwaC5yZQAKCRB5IYiKe1Ua8ox/AQD0zwMuwaYNMRYZYOcKPLWolFD3ExNfsZk8
+tZO4kOkZ9gD/XAJEU/qKx+5wfzC5EW+EM7yQJHBmN67tPKVE+PYGjgY=
+=cY/V
 -----END PGP SIGNATURE-----

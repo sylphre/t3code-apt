@@ -45,7 +45,10 @@ for arch in $ARCHES; do
 done
 
 # apt-ftparchive only passes through the fields it knows, so add the
-# copyright field to Release after it is generated.
+# copyright field to Release after it is generated. Drop the old signed
+# files first: apt-ftparchive would otherwise hash the previous Release
+# and Release.gpg into the new one.
+rm -f "${DIST}/Release" "${DIST}/InRelease" "${DIST}/Release.gpg"
 {
   copyright_field
   apt-ftparchive \

@@ -14,14 +14,20 @@ MANIFEST="${ROOT}/upstream/debs.sha256"
 [[ -f "$MANIFEST" ]] || die "missing manifest: upstream/debs.sha256"
 [[ -d "$POOL" ]] || die "no pool yet: run scripts/fetch.sh <version>"
 
-status=0
+debs=()
 while IFS= read -r -d '' deb; do
+  debs+=("$deb")
+done < <(find "$POOL" -maxdepth 1 -name '*.deb' -print0)
+[[ "${#debs[@]}" -gt 0 ]] || die "pool is empty: run scripts/fetch.sh <version>"
+
+status=0
+for deb in "${debs[@]}"; do
   name="$(basename "$deb")"
   if ! grep -qF "  ${name}" "$MANIFEST"; then
     log "unpinned package in pool: ${name}"
     status=1
   fi
-done < <(find "$POOL" -maxdepth 1 -name '*.deb' -print0)
+done
 
 [[ "$status" -eq 0 ]] || die "verification failed: pin or remove the files above"
 
