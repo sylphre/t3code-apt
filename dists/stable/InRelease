@@ -5,7 +5,7 @@ Copyright: (C) 2014-2026 Laurier Sylph. All rights reserved.
 Architectures: amd64 arm64
 Codename: stable
 Components: main
-Date: Sat, 21 Nov 2026 08:56:22 +0000
+Date: Sat, 21 Nov 2026 08:56:38 +0000
 Description: APT archive for the T3 Code desktop app
 Label: T3 Code
 Origin: T3 Code APT Archive
@@ -40,8 +40,8 @@ SHA512:
  43d1724e5dcd976a656f523530c2f4b6a3525a0d780808cbc76a8e0de340b973dca166c6c1138b71fb42f58b0287f50a1926688b7783cc55b2d2fb9ddd9a395d              820 main/binary-arm64/Packages.xz
 -----BEGIN PGP SIGNATURE-----
 
-iIcEARYIAC8WIQQCb4EyQ+RiyGi6jyV5IYiKe1Ua8gUCawFcthEcbGF1cmllckBz
-eWxwaC5yZQAKCRB5IYiKe1Ua8ox/AQD0zwMuwaYNMRYZYOcKPLWolFD3ExNfsZk8
-tZO4kOkZ9gD/XAJEU/qKx+5wfzC5EW+EM7yQJHBmN67tPKVE+PYGjgY=
-=cY/V
+iIcEARYIAC8WIQQCb4EyQ+RiyGi6jyV5IYiKe1Ua8gUCawFcxhEcbGF1cmllckBz
+eWxwaC5yZQAKCRB5IYiKe1Ua8n8DAQD6MF22LxB5sKLh5blNHzwllEqvbSL0VXVM
+xwY8rlxEewD/crfUzf4iqNIxf0lnnka9WRmZnJJAIRxtKvVnBxfO4wo=
+=Wn/C
 -----END PGP SIGNATURE-----
