@@ -1,0 +1,132 @@
+# Copyright (C) 2014-2026 Laurier Sylph. All rights reserved.
+#
+# Build the signed APT archive and publish it with GitHub Pages.
+#
+# Secrets:
+#   APT_GPG_PRIVATE_KEY  armored private signing key (required)
+#   APT_GPG_PASSPHRASE   key passphrase, if the key has one (optional)
+#
+# The published key must match key/t3code-archive-keyring.asc; the job
+# fails if the exported public key differs from the committed one.
+
+name: apt
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Upstream T3 Code version, e.g. 0.1.11 (blank = latest)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: apt
+  cancel-in-progress: false
+
+env:
+  KEEP_VERSIONS: '2'
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            apt-utils dpkg-dev gnupg jq xz-utils
+
+      - name: Resolve version
+        id: version
+        env:
+          REQUESTED: ${{ inputs.version }}
+        run: |
+          if [[ -n "$REQUESTED" ]]; then
+            value="${REQUESTED#v}"
+          else
+            value="$(scripts/latest-version.sh)"
+          fi
+          printf 'value=%s\n' "$value" >> "$GITHUB_OUTPUT"
+          echo "T3 Code version: $value"
+
+      - name: Import signing key
+        env:
+          APT_GPG_PRIVATE_KEY: ${{ secrets.APT_GPG_PRIVATE_KEY }}
+          APT_GPG_PASSPHRASE: ${{ secrets.APT_GPG_PASSPHRASE }}
+        run: |
+          if [[ -z "${APT_GPG_PRIVATE_KEY:-}" ]]; then
+            echo '::error::secret APT_GPG_PRIVATE_KEY is not set'; exit 1
+          fi
+          export GNUPGHOME="$RUNNER_TEMP/gnupg"
+          mkdir -m 700 -p "$GNUPGHOME"
+          printf '%s\n' "$APT_GPG_PRIVATE_KEY" | gpg --batch --quiet --import
+          # Strip any passphrase so later steps need no agent.
+          fpr="$(gpg --batch --list-secret-keys --with-colons \
+            | awk -F: '/^fpr:/ { print $10; exit }')"
+          [[ -n "$fpr" ]] || { echo '::error::no secret key imported'; exit 1; }
+          if [[ -n "${APT_GPG_PASSPHRASE:-}" ]]; then
+            gpg --batch --quiet --pinentry-mode loopback \
+              --passphrase "$APT_GPG_PASSPHRASE" \
+              --quick-set-expire "$fpr" never >/dev/null 2>&1 || true
+          fi
+          {
+            echo "GNUPGHOME=$GNUPGHOME"
+          } >> "$GITHUB_ENV"
+
+      - name: Fetch and verify packages
+        run: scripts/fetch.sh "${{ steps.version.outputs.value }}"
+
+      - name: Backfill pinned versions
+        env:
+          KEEP_VERSIONS: ${{ env.KEEP_VERSIONS }}
+        run: |
+          # A fresh runner has no pool, so rebuild the newest pinned
+          # versions from upstream to keep N versions installable.
+          mapfile -t versions < <(
+            awk '!/^#/ { print $2 }' upstream/debs.sha256 |
+              sed -E 's/^T3-Code-(.+)-(amd64|arm64)\.deb$/\1/' |
+              sort -uV | tail -n "$KEEP_VERSIONS"
+          )
+          for v in "${versions[@]}"; do
+            [[ "$v" == "${{ steps.version.outputs.value }}" ]] && continue
+            echo "backfilling $v"
+            scripts/fetch.sh "$v" || echo "::warning::could not refetch $v"
+          done
+
+      - name: Build, verify and assemble site
+        run: scripts/prepare-site.sh "$RUNNER_TEMP/site" "$KEEP_VERSIONS"
+
+      - name: Fail on key mismatch
+        run: |
+          if ! git diff --quiet -- key/t3code-archive-keyring.asc; then
+            echo '::error::signing key differs from key/t3code-archive-keyring.asc'
+            git --no-pager diff -- key/t3code-archive-keyring.asc
+            exit 1
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

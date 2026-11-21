@@ -20,6 +20,9 @@ scripts/verify.sh              re-check pool/ against pinned hashes
 scripts/index.sh               build Packages/Release/InRelease + sign
 scripts/check.sh               verify signatures and file references
 scripts/install-hint.sh        print the apt setup snippet for BASE_URL
+scripts/latest-version.sh      resolve the newest upstream release
+scripts/prune.sh               keep only the newest N pool versions
+scripts/prepare-site.sh        assemble the Pages site within budget
 scripts/deploy.sh              rsync the archive to a static host
 scripts/setup-git.sh           enable the repo's git hooks
 scripts/hooks/pre-commit       block secrets/binaries, re-check signatures
@@ -54,7 +57,31 @@ it will be served, then regenerate nothing else: the URL is only used by
 
 ## Publishing
 
-The repository root is the web root. Serve these paths unchanged:
+GitHub Actions builds, signs and publishes the archive to GitHub Pages on
+every push to `main`, on a daily schedule, and on manual dispatch
+(`.github/workflows/apt.yml`). The workflow needs one repository secret:
+
+| Secret | Purpose |
+| --- | --- |
+| `APT_GPG_PRIVATE_KEY` | armored private signing key |
+| `APT_GPG_PASSPHRASE` | key passphrase, only if the key has one |
+
+Export the local key once and store it:
+
+```sh
+GNUPGHOME=secrets/gnupg gpg --armor --export-secret-keys laurier@sylph.re
+```
+
+The job fails if the imported key does not reproduce the committed
+`key/t3code-archive-keyring.asc`, so a wrong or rotated key cannot
+silently publish a repository clients already trust. Enable Pages with
+source "GitHub Actions" in the repository settings.
+
+The published site keeps the newest `KEEP_VERSIONS` releases (default 2)
+and retries with fewer if the site would exceed 1 GB.
+
+The repository root is also the web root for non-Pages hosting. Serve
+these paths unchanged:
 
 ```text
 /dists/stable/InRelease
@@ -79,7 +106,8 @@ To push a build out with rsync:
 make deploy DEST=user@host:/srv/t3code
 ```
 
-Then on a client machine:
+Then on a client machine, with `BASE_URL=https://sylphre.github.io/t3code-apt`
+for the Pages deployment:
 
 ```sh
 sudo install -d -m 0755 /etc/apt/keyrings

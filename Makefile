@@ -3,9 +3,10 @@
 SHELL := /bin/bash
 ROOT := $(CURDIR)
 PORT ?= 8080
+KEEP ?= 2
 
 .DEFAULT_GOAL := help
-.PHONY: help key fetch verify index sign check hint deploy all serve clean
+.PHONY: help key fetch verify index sign check hint prune deploy all serve clean
 
 help:
 	@printf '%s\n' \
@@ -18,6 +19,7 @@ help:
 	  '  make sign                re-sign the current Release file' \
 	  '  make check               validate the signed archive' \
 	  '  make hint                print the client setup snippet' \
+	  '  make prune KEEP=n        keep only the newest n versions' \
 	  '  make deploy DEST=...     rsync the archive to a static host' \
 	  '  make all VERSION=x.y.z   fetch, index, check' \
 	  '  make serve               serve the repo root on PORT ($(PORT))' \
@@ -49,6 +51,9 @@ check:
 
 hint:
 	@scripts/install-hint.sh
+
+prune:
+	@scripts/prune.sh "$(KEEP)"
 
 deploy:
 	@scripts/deploy.sh "$(DEST)"
